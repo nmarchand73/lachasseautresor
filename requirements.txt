@@ -1,0 +1,11 @@
+# Core dependencies - Version simplifiée
+langchain-openai>=0.0.5
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+
+# CLI et interface
+click>=8.1.7
+rich>=13.7.0
+
+# JSON validation
+jsonschema>=4.20.0
