@@ -1,121 +1,121 @@
-# 🚁 La Chasse au Trésor - Générateur de Livres d'Aventure
+# 🚁 La Chasse au Trésor - Adventure Book Generator
 
-Système basé sur CrewAI pour générer automatiquement des livres d'aventure interactifs "dont vous êtes le héros" inspirés de l'émission culte des années 80 "La Chasse au Trésor" avec Philippe de Dieuleveult.
+AI-powered system based on CrewAI to automatically generate interactive "choose your own adventure" books inspired by the iconic 1980s French TV show "La Chasse au Trésor" with Philippe de Dieuleveult.
 
 ## 📚 Description
 
-Ce projet génère automatiquement des livres d'aventure interactifs "dont vous êtes le héros" inspirés de l'émission "La Chasse au Trésor" des années 80. Le système utilise l'IA pour créer des histoires authentiques avec :
+This project automatically generates interactive "choose your own adventure" books inspired by the 1980s TV show "La Chasse au Trésor". The system uses AI to create authentic stories featuring:
 
-- **Ton Philippe de Dieuleveult** : Enthousiasme et émerveillement authentique
-- **Énigmes culturelles** : Basées sur l'histoire et la géographie
-- **Format TV années 80** : Structure en épisodes avec suspense
-- **Descriptions immersives** : Lieux exotiques et rencontres locales
-- **Choix narratifs** : Embranchements multiples pour la rejouabilité
+- **Philippe de Dieuleveult Style**: Authentic enthusiasm and wonder
+- **Cultural Enigmas**: Based on history and geography
+- **1980s TV Format**: Episode structure with suspense
+- **Immersive Descriptions**: Exotic locations and local encounters
+- **Narrative Choices**: Multiple branches for replayability
 
 ## 🚀 Installation
 
-1. **Cloner le repository**
+1. **Clone the repository**
 ```bash
 git clone https://github.com/nmarchand73/lachasseautresor.git
-cd lachasseauxtresor
+cd lachasseautresor
 ```
 
-2. **Créer un environnement virtuel**
+2. **Create virtual environment**
 ```bash
 python -m venv venv
-source venv/bin/activate  # Sur Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. **Installer les dépendances**
+3. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Configurer l'API OpenAI**
+4. **Configure OpenAI API**
 ```bash
 cp .env.example .env
-# Éditer .env et ajouter votre clé OPENAI_API_KEY
+# Edit .env and add your OPENAI_API_KEY
 ```
 
-## 📖 Utilisation
+## 📖 Usage
 
-### Test rapide (recommandé)
+### Quick test (recommended)
 
 ```bash
-# Test du système complet avec génération d'exemple
+# Complete system test with example generation
 python test_clean.py
 ```
 
-### Générer un livre
+### Generate a book
 
 ```bash
-# Génération simple (format Markdown uniquement)
+# Simple generation (Markdown format only)
 python -m src.main generate
 
-# Génération avec thème spécifique
-python -m src.main generate --theme "Les Mystères d'Égypte"
+# Generation with specific theme
+python -m src.main generate --theme "The Mysteries of Egypt"
 
-# Mode verbose pour voir les détails
+# Verbose mode to see details
 python -m src.main generate -v
 ```
 
-### Autres commandes disponibles
+### Other available commands
 
 ```bash
-# Lister les livres générés
+# List generated books
 python -m src.main list-books
 
-# Prévisualiser un livre Markdown
-python -m src.main preview output/markdown/livre.md
+# Preview a Markdown book
+python -m src.main preview output/markdown/book.md
 
-# Nettoyer les anciens fichiers
+# Clean old files
 python -m src.main clean
 
-# Afficher l'aide
+# Show help
 python -m src.main --help
 ```
 
-## 📁 Structure du Projet
+## 📁 Project Structure
 
 ```
 lachasseauxtresor/
 ├── src/
-│   ├── simple_generator.py    # Générateur principal
+│   ├── simple_generator.py    # Main generator
 │   ├── main.py               # CLI interface
-│   └── utils/                # Utilitaires
-│       ├── file_handler.py   # Gestion fichiers
-│       └── json_formatter.py # Utilitaires JSON
-├── output/                   # Livres générés
-│   ├── books/               # Fichiers JSON
-│   └── markdown/            # Fichiers Markdown
-├── brief/                   # Documentation du projet
-│   ├── concept.md           # Concept original
-│   ├── PRD_*.md            # Spécifications
-│   └── book_golden_bullets.json # Exemple format
-├── test_*.py               # Scripts de test
-├── CLAUDE.md              # Instructions pour Claude
-├── QUICKSTART.md          # Guide rapide
-└── requirements.txt       # Dépendances
+│   └── utils/                # Utilities
+│       ├── file_handler.py   # File management
+│       └── json_formatter.py # JSON utilities
+├── output/                   # Generated books
+│   ├── books/               # JSON files
+│   └── markdown/            # Markdown files
+├── brief/                   # Project documentation
+│   ├── concept.md           # Original concept
+│   ├── PRD_*.md            # Specifications
+│   └── book_golden_bullets.json # Format example
+├── test_*.py               # Test scripts
+├── CLAUDE.md              # Claude instructions
+├── QUICKSTART.md          # Quick guide
+└── requirements.txt       # Dependencies
 ```
 
-## 📊 Format de Sortie
+## 📊 Output Format
 
-Les livres sont générés en **format Markdown uniquement** :
+Books are generated in **Markdown format only**:
 
-### Format Markdown
-Structure organisée avec :
-- **Table des matières** avec liens de navigation
-- **Sections numérotées** avec titres explicites
-- **Formatage lisible** pour les humains
-- **Compatible** avec les éditeurs Markdown
-- **Liens interactifs** entre les sections
-- **Métadonnées** en en-tête YAML
+### Markdown Format
+Organized structure with:
+- **Table of contents** with navigation links
+- **Numbered sections** with explicit titles
+- **Human-readable formatting**
+- **Compatible** with Markdown editors
+- **Interactive links** between sections
+- **YAML metadata** in header
 
-### Structure du fichier généré
+### Generated file structure
 
 ```markdown
 ---
-title: "La Chasse au Trésor: Les Mystères d'Égypte"
+title: "La Chasse au Trésor: The Mysteries of Egypt"
 sections_found: 5
 ---
 
@@ -124,94 +124,94 @@ sections_found: 5
 ## Table of Contents
 
 - [**Introduction**](#introduction) (`intro`)
-- [**Section 1: Titre**](#section-1-titre) (`1`)
-- [**Section 2: Titre**](#section-2-titre) (`2`)
+- [**Section 1: Title**](#section-1-title) (`1`)
+- [**Section 2: Title**](#section-2-title) (`2`)
 
 ---
 
 ## Introduction
 
-[Contenu de l'introduction...]
+[Introduction content...]
 
 **Choices:**
 
-- [Commencer l'aventure](#section-1)
+- [Start the adventure](#section-1)
 
 ---
 
-## Section 1: Titre
+## Section 1: Title
 
-[Contenu de la section...]
+[Section content...]
 
 **Choices:**
 
-- [Choix 1](#section-2)
-- [Choix 2](#section-2)
+- [Choice 1](#section-2)
+- [Choice 2](#section-2)
 ```
 
 ## 🔧 Configuration
 
-Éditer le fichier `.env` pour personnaliser :
+Edit the `.env` file to customize:
 
 ```env
-# Clé API OpenAI (optionnelle - fallback sans IA disponible)
+# OpenAI API Key (optional - fallback without AI available)
 OPENAI_API_KEY=your_key_here
 
-# Modèle OpenAI
+# OpenAI Model
 OPENAI_MODEL_NAME=gpt-4o-mini
 
-# Paramètres de génération
+# Generation parameters
 TEMPERATURE=0.7
 MAX_TOKENS=2000
 ```
 
-## 🎯 Workflow de Génération
+## 🎯 Generation Workflow
 
-1. **Initialisation** : Configuration du thème et de la structure (95 paragraphes)
-2. **Génération** : Création du contenu avec IA (ou fallback statique)
-3. **Formatage** : Export en Markdown (lisible) et/ou JSON (Golden Bullets)
-4. **Sauvegarde** : Fichiers horodatés dans output/
+1. **Initialization**: Theme configuration and structure (95 paragraphs)
+2. **Generation**: Content creation with AI (or static fallback)
+3. **Formatting**: Export to Markdown (readable) format
+4. **Save**: Timestamped files in output/
 
-## ⚙️ État Actuel
+## ⚙️ Current Status
 
-**Version actuelle** : Système de génération fonctionnel avec :
-- ✅ Interface CLI complète
-- ✅ Générateur de contenu (avec IA OpenAI)
-- ✅ Export Markdown avec navigation
-- ✅ Validation basique du contenu
-- ✅ Tests automatisés
-- ✅ Fallback sans API (contenu statique)
-- 🚧 Integration CrewAI (en développement)
+**Current version**: Functional generation system with:
+- ✅ Complete CLI interface
+- ✅ Content generator (with OpenAI)
+- ✅ Markdown export with navigation
+- ✅ Basic content validation
+- ✅ Automated tests
+- ✅ Fallback without API (static content)
+- 🚧 CrewAI integration (in development)
 
-> **Note**: La génération JSON (format Golden Bullets) a été temporairement désactivée pour se concentrer sur la qualité du format Markdown.
+> **Note**: JSON generation (Golden Bullets format) has been temporarily disabled to focus on Markdown format quality.
 
 ## 🧪 Tests
 
 ```bash
-# Test complet du système nettoyé
+# Complete system test
 python test_clean.py
 
-# Tests des imports (optionnel)
+# Import tests (optional)
 python test_imports.py
 ```
 
 ## 📝 License
 
-MIT License - Voir [LICENSE](LICENSE) pour plus de détails.
+MIT License - See [LICENSE](LICENSE) for details.
 
-## 🙏 Crédits
+## 🙏 Credits
 
-Inspiré par l'émission "La Chasse au Trésor" (1981-1984) créée par Jacques Antoine et présentée par Philippe Gildas et Philippe de Dieuleveult.
+Inspired by the TV show "La Chasse au Trésor" (1981-1984) created by Jacques Antoine and hosted by Philippe Gildas and Philippe de Dieuleveult.
 
-## 🤝 Contribution
+## 🤝 Contributing
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit vos changements (`git commit -m 'Add AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
+Contributions are welcome! Please feel free to:
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## 📧 Contact
 
-Pour toute question ou suggestion, ouvrez une issue sur GitHub.
+For questions or suggestions, please open an issue on GitHub.
