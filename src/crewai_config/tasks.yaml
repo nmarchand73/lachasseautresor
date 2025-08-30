@@ -3,124 +3,241 @@
 
 conception_aventure:
   description: >
-    Conçois le concept général d'une aventure "La Chasse au Trésor" pour le thème "{theme}" 
-    avec {num_sections} sections.
+    MISSION JACQUES ANTOINE: Concçois l'architecture narrative complète pour "{theme}" 
+    selon ta méthode légendaire de création d'énigmes.
     
-    MISSION FOCALISÉE: Créer la structure narrative et les 3 énigmes principales.
+    UTILISE TES OUTILS:
+    - EnigmaValidator: Pour valider le style poétique de chaque énigme
+    - CulturalContextValidator: Pour garantir l'authenticité culturelle
     
-    CONTRAINTES:
-    - Diviser en 3 actes équilibrés (format TV 45 minutes)  
-    - Créer exactement 3 énigmes style Jacques Antoine (poétiques, culturelles)
-    - Définir l'arc narratif avec progression claire
-    - Assurer cohérence thématique pour {theme}
+    STRUCTURE NARRATIVE OBLIGATOIRE:
+    1. ACTE I (Sections 1-{first_third}): "DÉCOUVERTE" - Arrivée, premier contact, énigme d'introduction
+    2. ACTE II (Sections {second_third}): "EXPLORATION" - Approfondissement, rencontres, énigme intermédiaire
+    3. ACTE III (Sections {final_third}): "RÉVÉLATION" - Climax, résolution, énigme finale
     
-    CONTEXTE CULTUREL:
-    - Respecter l'authenticité des années 80 (pas de technologie moderne)
-    - Intégrer les contraintes d'époque (radio, boussole, hélicoptère)
-    - Ton familial adapté 7-77 ans, éducatif mais divertissant
+    CRÉATION D'ÉNIGMES (TON STYLE SIGNATURE):
+    - 3 énigmes poétiques avec rimes subtiles et références croisées
+    - Mélange histoire/géographie/mythologie spécifique à {theme}
+    - Indices visuels et symboliques intégrés naturellement
+    - Difficulté progressive: accessible → intermédiaire → expert
+    
+    CONTRAINTES TEMPORELLES TV:
+    - Chaque acte = 15 minutes exactes
+    - Moments suspense avant "coupures pub" (fin des actes I et II)
+    - Alternance studio/terrain/hélicoptère pour rythme dynamique
   expected_output: >
-    Document structuré avec:
-    - Titre de l'aventure
-    - Destination principale 
-    - Arc narratif en 3 actes
-    - 3 énigmes principales (une par acte)
-    - Éléments éducatifs clés
+    DOCUMENT STRUCTURÉ JACQUES ANTOINE:
+    
+    **CONCEPT GÉNÉRAL:**
+    - Titre: [Titre évocateur et mystérieux]
+    - Destination: [Lieu précis avec justification culturelle]
+    - Pitch: [Résumé en 2 phrases de l'aventure]
+    
+    **ARC NARRATIF 3 ACTES:**
+    - Acte I: [Objectif, enjeu, première découverte]
+    - Acte II: [Complication, approfondissement, retournement]
+    - Acte III: [Climax, résolution, révélation finale]
+    
+    **3 ÉNIGMES MAÎTRES:**
+    1. Énigme I (Découverte): [Poème d'introduction 4-6 vers]
+    2. Énigme II (Exploration): [Vers intermédiaires avec références culturelles]
+    3. Énigme III (Révélation): [Énigme finale sophistiquée]
+    
+    **ÉLÉMENTS ÉDUCATIFS CLÉS:**
+    - Faits historiques fascinants
+    - Spécificités culturelles respectueuses
+    - Géographie et patrimoine
   agent: jacques_antoine
 
 introduction_studio:
   description: >
-    Rédige l'introduction de l'émission "La Chasse au Trésor" pour l'aventure "{theme}".
+    MISSION PHILIPPE GILDAS: Crée l'introduction studio légendaire pour "{theme}" 
+    avec ton style inimitable de présentateur parisien.
     
-    MISSION FOCALISÉE: Créer l'ambiance studio et présenter l'aventure.
+    UTILISE TON OUTIL:
+    - RadioContactGenerator: Pour créer des dialogues radio authentiques
     
-    DÉPENDANCE: Utilise le concept créé par Jacques Antoine.
+    DÉPENDANCE CRITIQUE: Intègre les énigmes et concept de Jacques Antoine.
     
-    ÉLÉMENTS OBLIGATOIRES:
-    - Accueil téléspectateurs + candidats depuis studio parisien
-    - Présentation culturelle du thème {theme}
-    - Contact radio: "Allô Philippe? Vous nous recevez?"
-    - Lecture de la PREMIÈRE énigme (inspirée de Jacques Antoine)
-    - Instructions aux candidats: "Que conseillez-vous à Philippe?"
+    SÉQUENCE D'INTRODUCTION OBLIGATOIRE:
     
-    STYLE AUTHENTIQUE:
-    - Ton Philippe Gildas (pédagogique, chaleureux)
-    - "Voyons ce que nous dit l'énigme..."
-    - "Attention, le temps presse!"
-    - Suspense avant "coupures pub"
+    1. **OUVERTURE STUDIO (500 chars)**:
+    "Bonsoir et bienvenue dans notre studio parisien pour une nouvelle édition 
+    de 'La Chasse au Trésor'..." [Ton chaleureux, accueil candidats]
+    
+    2. **CONTEXTUALISATION CULTURELLE (800 chars)**:
+    Présentation experte de {theme} avec:
+    - Contexte historique fascinant
+    - Enjeux géographiques et culturels
+    - "Ce soir, nous partons à la découverte de..."
+    
+    3. **CONTACT RADIO LÉGENDAIRE (400 chars)**:
+    "Allô Philippe? Vous nous recevez?" [Utilise RadioContactGenerator]
+    - Établir connexion studio/terrain
+    - Vérifier position et état de l'équipe
+    - Créer anticipation
+    
+    4. **LECTURE PREMIÈRE ÉNIGME (600 chars)**:
+    "Voyons ce que nous dit l'énigme..." [Intégrer énigme I de Jacques Antoine]
+    - Lecture dramatique et pédagogique
+    - Explication des enjeux
+    - "Que conseillez-vous à nos aventuriers?"
+    
+    5. **TRANSITION SUSPENSE (200 chars)**:
+    "Attention, le temps presse!" [Créer tension avant action]
+    
+    TON PHILIPPE GILDAS AUTHENTIQUE:
+    - Pédagogique sans condescendance
+    - "Nous suivons avec passion..."
+    - "L'émotion est à son comble ici au studio!"
+    - Professionnalisme journalistique RTL
   expected_output: >
-    Introduction complète de 2000-2500 caractères avec:
-    - Accueil studio authentique
-    - Présentation culturelle du thème
-    - Contact radio établi
-    - Première énigme intégrée
-    - Transition vers l'action
+    INTRODUCTION PHILIPPE GILDAS (2000-2500 caractères) avec:
+    
+    - Ouverture studio parisien authentique
+    - Contextualisation culturelle experte de {theme}
+    - Contact radio établi avec dialogues générés par outil
+    - Première énigme Jacques Antoine intégrée dramatiquement
+    - Transition suspense vers terrain
+    - Ton Philippe Gildas reconnaissable (pédagogie + chaleur)
   agent: philippe_gildas
 
 sections_terrain:
   description: >
-    Génère les {num_sections} sections d'aventure terrain pour "{theme}".
+    MISSION ÉQUIPE TERRAIN: Générer {num_sections} sections narratives immersives 
+    pour "{theme}" avec collaboration Philippe de Dieuleveult + Pilote + Expert Local.
     
-    MISSION FOCALISÉE: Créer les sections narratives avec répartition logique.
+    UTILISE VOS OUTILS SPÉCIALISÉS:
+    - SectionFormatter: Pour structurer chaque section au format Golden Bullets
+    - RadioContactGenerator: Pour dialogues studio/terrain authentiques
+    - CulturalContextValidator: Pour vérifier l'authenticité culturelle
     
-    DÉPENDANCES:
-    - Concept et énigmes de Jacques Antoine
-    - Introduction de Philippe Gildas
+    DÉPENDANCES NARRATIVES:
+    - Intègre concept + 3 énigmes de Jacques Antoine
+    - Utilise transitions radio de Philippe Gildas
+    - Maintiens cohérence avec structure 3 actes
     
-    RÉPARTITION INTELLIGENTE:
-    - Sections 1-{first_third}: Philippe de Dieuleveult découvre + Expert Local contextualise
-    - Sections {second_third}: Pilote transitions aériennes + Expert Local rencontres
-    - Sections {final_third}: Philippe de Dieuleveult résolution + moments épiques
+    RÉPARTITION INTELLIGENTE DES RÔLES:
+    - **Philippe de Dieuleveult** (sections 1-{first_third}, {final_third}): Action, exploration, moments épiques
+    - **Pilote** (transitions aériennes): Changements de lieu, vues panoramiques
+    - **Expert Local** (rencontres culturelles): Guides, habitants, gardiens de sites
     
-    CONTRAINTES PAR SECTION:
-    - Format strict: #XX **[Titre]** + 2000-2500 caractères
-    - Lecteur = candidats en studio (PAS Philippe de Dieuleveult)
-    - Communications radio intégrées naturellement
-    - Choix cohérents vers section suivante
-    - Authenticity années 80 totale
+    FORMAT STRICT POUR CHAQUE SECTION:
+    ```
+    #01
+    **[Titre évocateur 3-8 mots]**
     
-    COLLABORATION REQUISE:
-    - Maintenir continuité narrative
-    - Intégrer énigmes aux moments appropriés
-    - Utiliser transitions radio de Philippe Gildas
+    [TEXTE NARRATIF 1800-2200 caractères incluant]:
+    - Dialogue radio studio/terrain généré par outil
+    - Description immersive du lieu (à la Philippe de Dieuleveult)
+    - Action ou découverte significative
+    - Intégration naturelle d'énigme si applicable
+    - Moment de décision pour les candidats
+    ```
+    
+    EXEMPLE DE SECTION PARFAITE:
+    ```
+    #01
+    **Les Gardiens de Karnak**
+    
+    "Allô Philippe? Vous nous recevez depuis Louxor?" La voix familière de Philippe Gildas 
+    résonne dans le studio tandis que vous, candidats, étudiez les hiéroglyphes projetés 
+    sur l'écran. "Parfaitement! Je suis au cœur du temple de Karnak, c'est fantastique!" 
+    répond Philippe de Dieuleveult, sa voix vibrant d'enthousiasme.
+    
+    L'image vous montre les colonnes gigantesques du temple, écrasées de soleil. 
+    Philippe, en combinaison rouge, se tient respectueusement devant un mur couvert 
+    d'inscriptions millénaires. "Regardez ces hiéroglyphes extraordinaires! Un vieil 
+    égyptologue local vient de me confier que l'une de ces inscriptions cache 
+    l'indice de notre première énigme."
+    
+    L'expert vous explique: "Ces symboles racontent l'histoire du pharaon qui a 
+    caché le secret dans 'l'ombre du colosse quand Râ touche l'horizon'. Quelle 
+    merveille de poésie ancienne!" Candidats, à vous de déchiffrer: vers quelle 
+    direction Philippe doit-il se diriger quand le soleil sera à l'ouest?
+    ```
+    
+    CONTRAINTES ABSOLUES:
+    - Lecteur = Candidats en studio (JAMAIS Philippe de Dieuleveult)
+    - Époque 1981-1984 strict (radio, boussole, cartes papier)
+    - Respect culturel absolu des populations locales
+    - Intégration naturelle des outils via les dialogues
   expected_output: >
-    Ensemble structuré de {num_sections} sections avec:
-    - Format #XX **[Titre]** respecté
-    - Texte narratif 2000-2500 caractères chacune
-    - Choix de navigation cohérents
-    - Intégration énigmes et communications radio
-    - Progression narrative fluide
+    SÉRIE DE {num_sections} SECTIONS FORMATTÉES:
+    
+    Chaque section contenant:
+    - Format #XX **[Titre]** validé par SectionFormatter
+    - Texte 1800-2200 caractères avec dialogues radio générés
+    - Immersion culturelle validée par CulturalContextValidator
+    - Progression narrative cohérente avec concept Jacques Antoine
+    - Moments de décision clairs pour les candidats
   agent: philippe_dieuleveult
 
 revision_qualite:
   description: >
-    Supervise la révision qualité finale de l'aventure "{theme}".
+    MISSION RÉALISATEUR TV: Post-production finale et contrôle qualité 
+    maître pour l'aventure "{theme}" selon tes standards légendaires.
     
-    MISSION FOCALISÉE: Contrôle qualité et cohérence télévisuelle.
+    UTILISE TON OUTIL SPÉCIALISÉ:
+    - SectionFormatter: Pour valider la structure finale de chaque section
     
-    DÉPENDANCES:
-    - Concept de Jacques Antoine
-    - Introduction de Philippe Gildas
-    - Sections terrain de l'équipe
+    DÉPENDANCES COMPLÈTES:
+    - Concept + 3 énigmes de Jacques Antoine
+    - Introduction + transitions de Philippe Gildas
+    - {num_sections} sections terrain de l'équipe
     
-    CONTRÔLES OBLIGATOIRES:
-    - Cohérence narrative entre toutes les sections
-    - Intégration correcte des 3 énigmes principales
-    - Authenticité format TV années 80
-    - Communications radio studio/terrain réalistes
-    - Rythme 3 actes x 15 minutes respecté
-    - Moments de suspense "avant coupure pub"
-    - Transitions hélicoptère logiques
-    - Équilibre action/réflexion/culture
+    CONTRÔLE QUALITÉ EXHAUSTIF:
     
-    SCORING OBLIGATOIRE:
-    - Authenticité "La Chasse au Trésor" (/100)
-    - Cohérence narrative (/100)  
-    - Qualité générale (/100)
+    **1. AUTHENTICITÉ "LA CHASSE AU TRÉSOR" (/100):**
+    - Philippe Gildas guide candidats depuis studio parisien ✓
+    - Philippe de Dieuleveult en combinaison rouge sur terrain ✓
+    - Contacts radio "Allô Paris?" / "Philippe, nous vous entendons" ✓
+    - 3 énigmes Jacques Antoine (poétiques + culturelles) intégrées ✓
+    - Hélicoptère pour transitions aériennes ✓
+    - Technologie 1981-1984 uniquement (radio, boussole, cartes) ✓
+    - Expressions cultes: "Fantastique!", "Quelle merveille!" ✓
+    
+    **2. STRUCTURE TÉLÉVISUELLE (/100):**
+    - 3 actes équilibrés de 15 minutes ✓
+    - Montée dramatique progressive ✓
+    - Moments suspense avant coupures pub (fin actes I+II) ✓
+    - Alternance studio/terrain/hélicoptère ✓
+    - Équilibre action (40%) / culture (35%) / suspense (25%) ✓
+    
+    **3. QUALITÉ NARRATIVE (/100):**
+    - Cohérence entre toutes les sections ✓
+    - Immersion et descriptions captivantes ✓
+    - Respect culturel et précision historique ✓
+    - Progression logique vers résolution ✓
+    - Dialogues naturels et authentiques ✓
+    
+    **4. CONFORMITÉ FORMAT (/100):**
+    - Format Golden Bullets respecté ✓
+    - Sections #XX **[Titre]** + 2000 chars ✓
+    - Navigation cohérente entre sections ✓
+    - Métadonnées complètes ✓
+    
+    DIAGNOSTIC FINAL:
+    - Points forts identifiés
+    - Améliorations nécessaires
+    - Recommandations pour diffusion
   expected_output: >
-    Rapport de révision avec:
-    - Scores qualité détaillés (/100 chacun)
-    - Validation des 3 énigmes intégrées
-    - Confirmation structure TV 45 minutes
-    - Suggestions d'amélioration si nécessaires
-    - Validation finale pour publication
+    RAPPORT DE POST-PRODUCTION COMPLET:
+    
+    **SCORES DÉTAILLÉS:**
+    - Authenticité "La Chasse au Trésor": XX/100
+    - Structure télévisuelle: XX/100
+    - Qualité narrative: XX/100
+    - Conformité format: XX/100
+    - **SCORE GLOBAL: XX/100**
+    
+    **VALIDATION ÉNIGMES:**
+    - Énigme I intégrée: ✓/✗
+    - Énigme II intégrée: ✓/✗
+    - Énigme III intégrée: ✓/✗
+    
+    **DIAGNOSTIC:**
+    - Forces principales: [3-5 points forts]
+    - Améliorations: [suggestions précises si score < 85]
+    - Prêt pour diffusion: OUI/NON
   agent: realisateur_tv

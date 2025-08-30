@@ -2,7 +2,7 @@
 Outils CrewAI spécialisés pour La Chasse au Trésor
 Outils customisés selon les meilleures pratiques CrewAI 2024
 """
-from crewai_tools import BaseTool
+from crewai.tools import BaseTool
 from typing import Type, Dict, Any, List
 from pydantic import BaseModel, Field
 import json

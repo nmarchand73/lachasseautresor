@@ -18,13 +18,13 @@ from rich.console import Console
 from crewai import Agent, Task, Crew, Process
 from langchain_openai import ChatOpenAI
 
-# Import des outils customisés - Temporairement désactivé pour compatibilité
-# from src.crewai_tools.chasse_tresor_tools import (
-#     EnigmaValidatorTool, 
-#     SectionFormatterTool, 
-#     RadioContactGeneratorTool,
-#     CulturalContextValidatorTool
-# )
+# Import des outils customisés
+from src.crewai_tools.chasse_tresor_tools import (
+    EnigmaValidatorTool, 
+    SectionFormatterTool, 
+    RadioContactGeneratorTool,
+    CulturalContextValidatorTool
+)
 
 load_dotenv()
 
@@ -56,8 +56,8 @@ class ChasseTresorCrewGeneratorV2:
         self.agents_config = self._load_yaml_config('agents.yaml')
         self.tasks_config = self._load_yaml_config('tasks.yaml')
         
-        # Initialiser les outils spécialisés - Temporairement désactivé
-        self.tools = []  # self._init_specialized_tools()
+        # Initialiser les outils spécialisés
+        self.tools = self._init_specialized_tools()
         
         # Initialiser les agents depuis la config YAML
         self.agents = self._init_agents_from_yaml()
@@ -80,8 +80,13 @@ class ChasseTresorCrewGeneratorV2:
             return {}
     
     def _init_specialized_tools(self) -> List:
-        """Initialise les outils CrewAI spécialisés - Temporairement désactivé"""
-        return []  # Pas d'outils customisés pour le moment
+        """Initialise les outils CrewAI spécialisés"""
+        return [
+            EnigmaValidatorTool(),
+            SectionFormatterTool(),
+            RadioContactGeneratorTool(), 
+            CulturalContextValidatorTool()
+        ]
     
     def _init_agents_from_yaml(self) -> Dict[str, Agent]:
         """Initialise les agents depuis la configuration YAML"""
@@ -105,8 +110,29 @@ class ChasseTresorCrewGeneratorV2:
         return agents
     
     def _get_agent_tools(self, agent_name: str) -> List:
-        """Assigne les outils appropriés à chaque agent - Temporairement vide"""
-        return []  # Pas d'outils customisés pour le moment
+        """Assigne les outils appropriés à chaque agent"""
+        tool_assignments = {
+            'jacques_antoine': [
+                next(t for t in self.tools if t.name == 'enigma_validator'),
+                next(t for t in self.tools if t.name == 'cultural_context_validator')
+            ],
+            'philippe_gildas': [
+                next(t for t in self.tools if t.name == 'radio_contact_generator')
+            ],
+            'philippe_dieuleveult': [
+                next(t for t in self.tools if t.name == 'section_formatter'),
+                next(t for t in self.tools if t.name == 'radio_contact_generator')
+            ],
+            'expert_local': [
+                next(t for t in self.tools if t.name == 'cultural_context_validator')
+            ],
+            'realisateur_tv': [
+                next(t for t in self.tools if t.name == 'section_formatter')
+            ],
+            'pilote_helicoptere': []  # Pas d'outils spécifiques
+        }
+        
+        return tool_assignments.get(agent_name, [])
     
     def _signal_handler(self, signum, frame):
         """Handle CTRL+C interruption"""
@@ -177,7 +203,10 @@ class ChasseTresorCrewGeneratorV2:
             conception_task = self._create_task_from_yaml(
                 'conception_aventure', 
                 theme=theme, 
-                num_sections=num_sections
+                num_sections=num_sections,
+                first_third=first_third,
+                second_third=f"{first_third+1}-{second_third}",
+                final_third=f"{second_third+1}-{final_third}"
             )
             progress.advance(task)
             
@@ -202,7 +231,11 @@ class ChasseTresorCrewGeneratorV2:
             # TÂCHE 4: Révision qualité (Réalisateur TV)
             revision_task = self._create_task_from_yaml(
                 'revision_qualite',
-                theme=theme
+                theme=theme,
+                num_sections=num_sections,
+                first_third=first_third,
+                second_third=f"{first_third+1}-{second_third}",
+                final_third=f"{second_third+1}-{final_third}"
             )
             progress.advance(task)
             
@@ -220,10 +253,14 @@ class ChasseTresorCrewGeneratorV2:
             
             progress.update(task, description="[green]🚀 Lancement CrewAI v2 optimisé...")
             
-            # Exécution du workflow focalisé
-            result = crew.kickoff()
-            
-            progress.update(task, description="[green]✅ CrewAI v2 terminé")
+            # Exécution du workflow focalisé avec timeout
+            try:
+                result = crew.kickoff()
+                progress.update(task, description="[green]✅ CrewAI v2 terminé")
+            except Exception as e:
+                progress.update(task, description="[red]❌ CrewAI v2 erreur")
+                self.console.print(f"[red]❌ Erreur workflow: {e}[/red]")
+                raise
         
         # Assemblage final du livre
         return self._assemble_book_v2(
@@ -281,6 +318,10 @@ class ChasseTresorCrewGeneratorV2:
         
         # Parser les sections avec outils
         sections_text = sections_output.raw if hasattr(sections_output, 'raw') else str(sections_output)
+        
+        # Debug optionnel (décommenter si nécessaire)
+        # self.console.print(f"[dim]Debug: Output sections ({len(sections_text)} chars)[/dim]")
+        
         parsed_sections = self._parse_sections_v2(sections_text, num_sections)
         
         # Intégrer les sections
@@ -303,42 +344,73 @@ class ChasseTresorCrewGeneratorV2:
         return book_data
     
     def _parse_sections_v2(self, sections_output: str, num_sections: int) -> Dict[int, Dict[str, Any]]:
-        """Parse sections avec validation par les outils"""
+        """Parse sections avec fallback intelligent"""
         sections_data = {}
         
-        # Utiliser l'outil SectionFormatterTool pour parser
-        section_pattern = r'#(\d{2})\s*\*\*([^*]+)\*\*(.*?)(?=#\d{2}|$)'
-        matches = re.findall(section_pattern, sections_output, re.DOTALL)
+        # Essayer plusieurs patterns de parsing
+        patterns = [
+            r'#(\d{1,2})\s+\*\*([^*]+)\*\*(.*?)(?=#\d|$)',  # Format standard avec espace
+            r'#(\d{1,2})\s*\n\*\*([^*]+)\*\*(.*?)(?=#\d|$)',  # Format avec nouvelle ligne
+            r'Section\s+(\d+)[:\s]*([^\n]+)\n(.*?)(?=Section\s+\d+|$)',  # Format alternatif
+            r'(\d+)\.\s*([^\n]+)\n(.*?)(?=\d+\.|$)'  # Format numéroté
+        ]
         
-        for match in matches:
-            section_num = int(match[0])
-            section_title = match[1].strip()
-            section_content = match[2].strip()
-            
-            if 1 <= section_num <= num_sections:
-                # Formatage direct sans outils customisés
-                formatted_section = f"#{section_num:02d}\n**{section_title}**\n\n{section_content}"
-                
-                # Générer choix
-                choices = self._generate_choices_v2(section_num, num_sections, section_title)
-                
-                sections_data[section_num] = {
-                    "paragraph_number": section_num,
-                    "text": formatted_section,
-                    "choices": choices,
-                    "combat": None
-                }
+        for pattern in patterns:
+            matches = re.findall(pattern, sections_output, re.DOTALL | re.MULTILINE)
+            if matches:
+                # self.console.print(f"[dim]Pattern trouvé: {len(matches)} sections[/dim]")
+                break
         
-        # Compléter les sections manquantes
-        if len(sections_data) < num_sections:
-            for i in range(1, num_sections + 1):
-                if i not in sections_data:
-                    sections_data[i] = {
-                        "paragraph_number": i,
-                        "text": f"#{i:02d}\n**Section CrewAI v2**\n\nSection générée par CrewAI v2 avec outils spécialisés.",
-                        "choices": self._generate_choices_v2(i, num_sections, "Section v2"),
+        if matches:
+            for match in matches:
+                section_num = int(match[0])
+                section_title = match[1].strip()
+                section_content = match[2].strip()
+                
+                if 1 <= section_num <= num_sections:
+                    formatted_section = f"#{section_num:02d}\n**{section_title}**\n\n{section_content}"
+                    choices = self._generate_choices_v2(section_num, num_sections, section_title)
+                    
+                    sections_data[section_num] = {
+                        "paragraph_number": section_num,
+                        "text": formatted_section,
+                        "choices": choices,
                         "combat": None
                     }
+        else:
+            # Si aucun pattern ne marche, créer des sections à partir du texte brut
+            self.console.print("[yellow]⚠️ Parsing échec, utilisation fallback intelligent[/yellow]")
+            
+            # Diviser le texte en paragraphes et créer des sections
+            paragraphs = [p.strip() for p in sections_output.split('\n\n') if p.strip() and len(p.strip()) > 100]
+            
+            for i in range(1, num_sections + 1):
+                if i - 1 < len(paragraphs):
+                    content = paragraphs[i - 1][:2000]  # Limiter à 2000 chars
+                    title = f"Section {i}"
+                    
+                    # Essayer d'extraire un titre du début du paragraphe
+                    first_line = content.split('\n')[0]
+                    if len(first_line) < 80:
+                        title = first_line
+                        content = '\n'.join(content.split('\n')[1:])
+                    
+                    sections_data[i] = {
+                        "paragraph_number": i,
+                        "text": f"#{i:02d}\n**{title}**\n\n{content}",
+                        "choices": self._generate_choices_v2(i, num_sections, title),
+                        "combat": None
+                    }
+        
+        # Compléter les sections manquantes avec du contenu par défaut
+        for i in range(1, num_sections + 1):
+            if i not in sections_data:
+                sections_data[i] = {
+                    "paragraph_number": i,
+                    "text": f"#{i:02d}\n**Section {i}**\n\nCette section sera générée lors de la prochaine version du système CrewAI.",
+                    "choices": self._generate_choices_v2(i, num_sections, f"Section {i}"),
+                    "combat": None
+                }
         
         return sections_data
     
