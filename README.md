@@ -39,40 +39,64 @@ cp .env.example .env
 
 ## 📖 Usage
 
-### Quick test (recommended)
+### 🎯 Interactive Mode (Recommended)
+
+Create personalized adventures with guided setup:
 
 ```bash
-# Complete system test with example generation
-python test_clean.py
+# Interactive creation wizard - starts questionnaire
+python -m src.main create
+
+# Or force interactive mode on generate command
+python -m src.main generate -i
 ```
 
-### Generate a book
+**Interactive features:**
+- 📍 **Step 1**: Choose destination (Egypt, Greece, Peru, France, Cambodia, Jordan, Tibet, or custom)
+- 🎭 **Step 2**: Select theme with region-specific suggestions
+- 📖 **Step 3**: Pick length (Test/Short/Standard/Complete/Custom 1-200 paragraphs)
+- ⚡ **Step 4**: Choose generation mode (fast/detailed)
+
+### 🚀 Quick Generation
 
 ```bash
-# Simple generation (Markdown format only)
-python -m src.main generate
+# Quick test (recommended first try)
+python -m src.main test
 
-# Generation with specific theme
-python -m src.main generate --theme "The Mysteries of Egypt"
+# Generate with specific parameters
+python -m src.main generate --theme "Les Mystères d'Égypte" --sections 30
 
-# Verbose mode to see details
-python -m src.main generate -v
+# Complete Golden Bullets format (95 paragraphs)
+python -m src.main generate --sections 95
 ```
 
-### Other available commands
+### 📋 Management Commands
 
 ```bash
-# List generated books
+# List all generated books
 python -m src.main list-books
+
+# Validate a book structure
+python -m src.main validate output/books/book.json
 
 # Preview a Markdown book
 python -m src.main preview output/markdown/book.md
 
-# Clean old files
+# Clean old files (30+ days)
 python -m src.main clean
 
-# Show help
+# System information
+python -m src.main info
+
+# Show all available commands
 python -m src.main --help
+```
+
+### 🧪 Testing
+
+```bash
+# Complete system test with example generation
+python test_clean.py
 ```
 
 ## 📁 Project Structure
@@ -167,20 +191,29 @@ MAX_TOKENS=2000
 
 ## 🎯 Generation Workflow
 
-1. **Initialization**: Theme configuration and structure (95 paragraphs)
-2. **Generation**: Content creation with AI (or static fallback)
-3. **Formatting**: Export to Markdown (readable) format
-4. **Save**: Timestamped files in output/
+### Interactive Mode
+1. **Questionnaire**: Choose destination, theme, length, and generation mode
+2. **Validation**: Preview configuration and confirm settings
+3. **Generation**: AI-powered content creation with progress tracking
+4. **Review**: Quality assessment with authenticity scoring
+5. **Export**: Markdown format with navigation and metadata
+
+### Direct Mode  
+1. **Configuration**: Command-line parameters or defaults
+2. **Generation**: Content creation with specified theme and length
+3. **Export**: Timestamped files in output/ directory
 
 ## ⚙️ Current Status
 
-**Current version**: Functional generation system with:
-- ✅ Complete CLI interface
-- ✅ Content generator (with OpenAI)
-- ✅ Markdown export with navigation
-- ✅ Basic content validation
-- ✅ Automated tests
-- ✅ Fallback without API (static content)
+**Current version**: Full-featured interactive generation system with:
+- ✅ **Interactive wizard**: Guided theme and country selection
+- ✅ **Flexible paragraph count**: 1-200 paragraphs with smart modes
+- ✅ **Complete CLI interface**: 8 commands with rich output
+- ✅ **Content generator**: OpenAI-powered with authentic TV show style
+- ✅ **Markdown export**: Navigation, metadata, and cross-references  
+- ✅ **Content validation**: Quality review and structure checking
+- ✅ **Automated tests**: Full system validation
+- ✅ **Regional themes**: Pre-configured suggestions by destination
 - 🚧 CrewAI integration (in development)
 
 > **Note**: JSON generation (Golden Bullets format) has been temporarily disabled to focus on Markdown format quality.
