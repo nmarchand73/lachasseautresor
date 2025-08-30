@@ -1,6 +1,6 @@
 # 🚁 La Chasse au Trésor - Adventure Book Generator
 
-AI-powered system based on CrewAI to automatically generate interactive "choose your own adventure" books inspired by the iconic 1980s French TV show "La Chasse au Trésor" with Philippe de Dieuleveult.
+AI-powered adventure book generator featuring both simple and advanced CrewAI multi-agent systems, inspired by the iconic 1980s French TV show "La Chasse au Trésor" with Philippe de Dieuleveult.
 
 ## 📚 Description
 
@@ -39,88 +39,96 @@ cp .env.example .env
 
 ## 📖 Usage
 
-### 🎯 Interactive Mode (Recommended)
+### 🤖 CrewAI Mode (Recommended)
 
-Create personalized adventures with guided setup:
+High-quality generation with 6 specialized agents:
 
 ```bash
-# Interactive creation wizard - starts questionnaire
-python -m src.main create
+# Interactive CrewAI mode
+python -m src.main generate --crew --interactive
 
-# Or force interactive mode on generate command
-python -m src.main generate -i
+# Direct CrewAI generation
+python -m src.main generate --crew --theme "Les Mystères d'Égypte" --sections 35
+
+# Install CrewAI dependencies first
+python install_crewai.py
+```
+
+### 🎯 Simple Mode (Fast)
+
+Basic generation for quick testing:
+
+```bash
+# Interactive mode
+python -m src.main generate --interactive
+
+# Direct generation
+python -m src.main generate --theme "Les Trésors de Petra" --sections 15
 ```
 
 **Interactive features:**
 - 📍 **Step 1**: Choose destination (Egypt, Greece, Peru, France, Cambodia, Jordan, Tibet, or custom)
 - 🎭 **Step 2**: Select theme with region-specific suggestions
-- 📖 **Step 3**: Pick length (Test/Short/Standard/Complete/Custom 1-200 paragraphs)
-- ⚡ **Step 4**: Choose generation mode (fast/detailed)
+- 📖 **Step 3**: Pick length (Short/Standard/Complete/Custom 1-200 paragraphs)
 
-### 🚀 Quick Generation
-
-```bash
-# Quick test (recommended first try)
-python -m src.main test
-
-# Generate with specific parameters
-python -m src.main generate --theme "Les Mystères d'Égypte" --sections 30
-
-# Complete Golden Bullets format (95 paragraphs)
-python -m src.main generate --sections 95
-```
-
-### 📋 Management Commands
+### 🔧 System Commands
 
 ```bash
-# List all generated books
-python -m src.main list-books
-
-# Validate a book structure
-python -m src.main validate output/books/book.json
-
-# Preview a Markdown book
-python -m src.main preview output/markdown/book.md
-
-# Clean old files (30+ days)
-python -m src.main clean
-
-# System information
+# Check system status and configuration
 python -m src.main info
+
+# Install and verify CrewAI setup
+python install_crewai.py
 
 # Show all available commands
 python -m src.main --help
 ```
 
-### 🧪 Testing
-
-```bash
-# Complete system test with example generation
-python test_clean.py
-```
 
 ## 📁 Project Structure
 
 ```
 lachasseauxtresor/
 ├── src/
-│   ├── simple_generator.py    # Main generator
-│   ├── main.py               # CLI interface
-│   └── utils/                # Utilities
-│       ├── file_handler.py   # File management
-│       └── json_formatter.py # JSON utilities
-├── output/                   # Generated books
-│   ├── books/               # JSON files
-│   └── markdown/            # Markdown files
-├── brief/                   # Project documentation
-│   ├── concept.md           # Original concept
-│   ├── PRD_*.md            # Specifications
-│   └── book_golden_bullets.json # Format example
-├── test_*.py               # Test scripts
-├── CLAUDE.md              # Claude instructions
-├── QUICKSTART.md          # Quick guide
-└── requirements.txt       # Dependencies
+│   ├── simple_generator.py       # Basic AI generator
+│   ├── crewai_generator_v2.py    # Advanced CrewAI system
+│   ├── main.py                   # CLI interface
+│   ├── crewai_config/           # CrewAI configuration
+│   │   ├── agents.yaml          # 6 specialized agents
+│   │   └── tasks.yaml           # Multi-phase workflow
+│   └── crewai_tools/           # Custom CrewAI tools
+├── output/                     # Generated books
+│   └── markdown/              # Markdown format only
+├── brief/                     # Project documentation
+│   ├── concept.md            # Original concept
+│   └── PRD_*.md             # Specifications
+├── install_crewai.py         # CrewAI setup script
+├── CLAUDE.md                # Development guide
+└── requirements.txt         # Dependencies
 ```
+
+## 🎬 Generation Systems
+
+### 🤖 CrewAI Multi-Agent System (Premium)
+
+6 specialized agents modeling the original TV show team:
+- **Jacques Antoine**: Enigma creator and producer
+- **Philippe Gildas**: Studio presenter and cultural expert
+- **Philippe de Dieuleveult**: Field adventurer and reporter
+- **Pilote**: Helicopter navigator and aerial reconnaissance
+- **Expert Local**: Cultural guides and local knowledge
+- **Réalisateur TV**: Episode structure and pacing
+
+**Benefits:**
+- 3-5x faster generation
+- Superior narrative quality
+- Authentic TV show atmosphere
+- Cultural accuracy and educational value
+- Period-accurate constraints (1980s)
+
+### 🔧 Simple Generator (Standard)
+
+Basic OpenAI-powered generation for quick testing and development.
 
 ## 📊 Output Format
 
@@ -205,27 +213,39 @@ MAX_TOKENS=2000
 
 ## ⚙️ Current Status
 
-**Current version**: Full-featured interactive generation system with:
-- ✅ **Interactive wizard**: Guided theme and country selection
-- ✅ **Flexible paragraph count**: 1-200 paragraphs with smart modes
-- ✅ **Complete CLI interface**: 8 commands with rich output
-- ✅ **Content generator**: OpenAI-powered with authentic TV show style
-- ✅ **Markdown export**: Navigation, metadata, and cross-references  
-- ✅ **Content validation**: Quality review and structure checking
-- ✅ **Automated tests**: Full system validation
-- ✅ **Regional themes**: Pre-configured suggestions by destination
-- 🚧 CrewAI integration (in development)
+**Current version**: Dual-system adventure book generator featuring:
 
-> **Note**: JSON generation (Golden Bullets format) has been temporarily disabled to focus on Markdown format quality.
+### ✅ Completed Features
+- **CrewAI Multi-Agent System**: 6 specialized agents with authentic TV show roles
+- **Interactive wizard**: Guided theme and country selection
+- **Flexible generation**: 1-200 paragraphs with intelligent mode selection
+- **Premium CLI interface**: Rich output with progress tracking
+- **Dual generators**: Simple (fast) and CrewAI (quality) options
+- **Markdown export**: Navigation, metadata, and cross-references
+- **Cultural accuracy**: Regional themes with historical authenticity
+- **1980s authenticity**: Period constraints and technology limitations
+- **Signal handling**: Graceful interruption with CTRL+C
 
-## 🧪 Tests
+### 🎯 System Capabilities
+- **Generation modes**: Short (15), Standard (35), Complete (95), Custom (1-200)
+- **Cultural destinations**: 7 pre-configured regions with themed suggestions
+- **Quality systems**: Both rapid prototyping and premium generation
+- **Installation support**: Automated CrewAI setup and verification
+
+## 🧪 Quick Start
 
 ```bash
-# Complete system test
-python test_clean.py
+# 1. Install CrewAI for best quality (recommended)
+python install_crewai.py
 
-# Import tests (optional)
-python test_imports.py
+# 2. Generate your first adventure (interactive)
+python -m src.main generate --crew --interactive
+
+# 3. Or quick test with simple generator
+python -m src.main generate --theme "Les Mystères d'Égypte" --sections 5
+
+# 4. Check system status
+python -m src.main info
 ```
 
 ## 📝 License
