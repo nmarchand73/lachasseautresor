@@ -39,52 +39,46 @@ cp .env.example .env
 
 ## 📖 Utilisation
 
+### Test rapide (recommandé)
+
+```bash
+# Test du système complet avec génération d'exemple
+python test_clean.py
+```
+
 ### Générer un livre
 
 ```bash
-# MODE TEST (RECOMMANDÉ POUR DÉBUTER) - Génère seulement 3 sections
-python -m src.main test
+# Génération simple (format Markdown par défaut)
+python -m src.main generate
 
-# Test avec thème personnalisé et plus de sections
-python -m src.main test --theme "Les Pyramides de Gizeh" --sections 5
-
-# GÉNÉRATION COMPLÈTE (95 sections) - Plus lent
+# Génération avec thème spécifique
 python -m src.main generate --theme "Les Mystères d'Égypte"
 
-# Génération en format JSON uniquement
+# Génération en format JSON
 python -m src.main generate --format json
+
+# Génération dans les deux formats
+python -m src.main generate --format both
 
 # Mode verbose pour voir les détails
 python -m src.main generate -v
 ```
 
-### Valider un livre existant
+### Autres commandes disponibles
 
 ```bash
-# Validation simple
-python -m src.main validate output/books/monlivre.json
-
-# Validation détaillée avec rapport
-python -m src.main validate output/books/monlivre.json --detailed
-```
-
-### Autres commandes
-
-```bash
-# Test rapide du système complet (RECOMMANDÉ APRÈS INSTALLATION)
-python test_clean.py
-
-# Lister tous les livres générés
+# Lister les livres générés
 python -m src.main list-books
 
-# Prévisualiser un livre en format Markdown
-python -m src.main preview output/books/monlivre.json
+# Prévisualiser un livre Markdown
+python -m src.main preview output/markdown/livre.md
 
-# Nettoyer les anciens fichiers (>30 jours)
+# Nettoyer les anciens fichiers
 python -m src.main clean
 
-# Afficher les informations système
-python -m src.main info
+# Afficher l'aide
+python -m src.main --help
 ```
 
 ## 📁 Structure du Projet
@@ -96,15 +90,18 @@ lachasseauxtresor/
 │   ├── main.py               # CLI interface
 │   └── utils/                # Utilitaires
 │       ├── file_handler.py   # Gestion fichiers
-│       ├── json_formatter.py # Format JSON
-│       └── markdown_formatter.py # Format Markdown
+│       └── json_formatter.py # Format JSON
 ├── output/                   # Livres générés
 │   ├── books/               # Fichiers JSON
 │   └── markdown/            # Fichiers Markdown
 ├── brief/                   # Documentation du projet
-├── test_clean.py           # Tests système
-├── QUICKSTART.md           # Guide rapide
-└── requirements.txt        # Dépendances (simplifiées)
+│   ├── concept.md           # Concept original
+│   ├── PRD_*.md            # Spécifications
+│   └── book_golden_bullets.json # Exemple format
+├── test_*.py               # Scripts de test
+├── CLAUDE.md              # Instructions pour Claude
+├── QUICKSTART.md          # Guide rapide
+└── requirements.txt       # Dépendances
 ```
 
 ## 📊 Formats de Sortie
@@ -155,23 +152,33 @@ Format technique avec :
 Éditer le fichier `.env` pour personnaliser :
 
 ```env
+# Clé API OpenAI (optionnelle - fallback sans IA disponible)
+OPENAI_API_KEY=your_key_here
+
 # Modèle OpenAI
-OPENAI_MODEL_NAME=gpt-4-turbo-preview
+OPENAI_MODEL_NAME=gpt-4o-mini
+
+# Paramètres de génération
 TEMPERATURE=0.7
 MAX_TOKENS=2000
-
-# Configuration CrewAI
-CREW_VERBOSE=true
-CREW_MEMORY=true
-CREW_MAX_ITER=50
 ```
 
 ## 🎯 Workflow de Génération
 
-1. **Thème et Structure** : Sélection automatique du thème et nombre de sections
-2. **Génération IA** : Création des sections avec OpenAI (fallback sans API)
-3. **Formatage** : Export automatique en JSON et Markdown
-4. **Validation** : Vérification basique de la structure
+1. **Initialisation** : Configuration du thème et de la structure (95 paragraphes)
+2. **Génération** : Création du contenu avec IA (ou fallback statique)
+3. **Formatage** : Export en Markdown (lisible) et/ou JSON (Golden Bullets)
+4. **Sauvegarde** : Fichiers horodatés dans output/
+
+## ⚙️ État Actuel
+
+**Version actuelle** : Système de génération fonctionnel avec :
+- ✅ Interface CLI complète
+- ✅ Générateur de contenu (avec/sans IA)
+- ✅ Export Markdown et JSON
+- ✅ Validation basique
+- ✅ Tests automatisés
+- 🚧 Integration CrewAI (en développement)
 
 ## 🧪 Tests
 
