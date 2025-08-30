@@ -16,7 +16,7 @@ Ce projet génère automatiquement des livres d'aventure interactifs "dont vous 
 
 1. **Cloner le repository**
 ```bash
-git clone https://github.com/yourusername/lachasseauxtresor.git
+git clone https://github.com/nmarchand73/lachasseautresor.git
 cd lachasseauxtresor
 ```
 
