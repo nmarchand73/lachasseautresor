@@ -4,6 +4,7 @@ Main entry point for La Chasse au Trésor book generator
 import click
 import os
 import sys
+import signal
 from pathlib import Path
 from dotenv import load_dotenv
 from rich.console import Console
@@ -26,6 +27,19 @@ load_dotenv()
 
 # Initialize Rich console
 console = Console()
+
+# Global flag for handling interruption
+interrupted = False
+
+def signal_handler(signum, frame):
+    """Handle CTRL+C interruption"""
+    global interrupted
+    interrupted = True
+    console.print("\n[yellow]⚠️ Interruption détectée... Arrêt en cours...[/yellow]")
+    raise KeyboardInterrupt("Processus interrompu par l'utilisateur")
+
+# Set up signal handler for CTRL+C
+signal.signal(signal.SIGINT, signal_handler)
 
 
 def collect_adventure_info() -> Dict[str, Any]:
@@ -127,24 +141,22 @@ def collect_adventure_info() -> Dict[str, Any]:
     console.print(f"\n[bold yellow]📖 ÉTAPE 3 : Longueur de votre livre[/bold yellow]")
     console.print("""
 Modes disponibles :
-  [cyan]1.[/cyan] 🧪 Test rapide (3-5 paragraphes) - Pour découvrir rapidement
-  [cyan]2.[/cyan] 🏃 Aventure courte (10-20 paragraphes) - Lecture d'1 heure  
-  [cyan]3.[/cyan] 📖 Aventure standard (30-50 paragraphes) - Format équilibré
-  [cyan]4.[/cyan] 📚 Livre complet (95 paragraphes) - Format Golden Bullets authentique
-  [cyan]5.[/cyan] 🎯 Nombre personnalisé
+  [cyan]1.[/cyan] 🏃 Aventure courte (10-20 paragraphes) - Lecture d'1 heure  
+  [cyan]2.[/cyan] 📖 Aventure standard (30-50 paragraphes) - Format équilibré
+  [cyan]3.[/cyan] 📚 Livre complet (95 paragraphes) - Format Golden Bullets authentique
+  [cyan]4.[/cyan] 🎯 Nombre personnalisé
 """)
     
     length_options = {
-        1: ("Test rapide", 5),
-        2: ("Aventure courte", 15),
-        3: ("Aventure standard", 35),
-        4: ("Livre complet", 95),
-        5: ("Personnalisé", None)
+        1: ("Aventure courte", 15),
+        2: ("Aventure standard", 35),
+        3: ("Livre complet", 95),
+        4: ("Personnalisé", None)
     }
     
     while True:
         try:
-            length_choice = IntPrompt.ask("Choisissez la longueur (1-5)", default=2)
+            length_choice = IntPrompt.ask("Choisissez la longueur (1-4)", default=2)
             if length_choice in length_options:
                 length_name, sections = length_options[length_choice]
                 if sections is None:
@@ -164,18 +176,6 @@ Modes disponibles :
     
     console.print(f"[green]✅ Longueur sélectionnée : {length_name}[/green]")
     
-    # Mode de génération
-    console.print(f"\n[bold yellow]⚡ ÉTAPE 4 : Mode de génération[/bold yellow]")
-    is_test = sections <= 10
-    
-    if is_test:
-        console.print("[yellow]Mode test automatiquement sélectionné (≤10 paragraphes)[/yellow]")
-    else:
-        use_test = Confirm.ask(
-            "Utiliser le mode test pour une génération plus rapide ?",
-            default=False
-        )
-        is_test = use_test
     
     # Résumé final
     console.print(Panel.fit(
@@ -183,7 +183,7 @@ Modes disponibles :
         f"[cyan]Destination :[/cyan] {selected_country}\n"
         f"[cyan]Thème :[/cyan] {selected_theme}\n"  
         f"[cyan]Paragraphes :[/cyan] {sections}\n"
-        f"[cyan]Mode :[/cyan] {'Test (rapide)' if is_test else 'Standard (détaillé)'}",
+        f"[cyan]Mode :[/cyan] Standard",
         border_style="green"
     ))
     
@@ -194,8 +194,7 @@ Modes disponibles :
     return {
         "country": selected_country,
         "theme": selected_theme,
-        "sections": sections,
-        "test_mode": is_test
+        "sections": sections
     }
 
 
@@ -247,14 +246,14 @@ def create(output: str):
             )
             
             # Générer le livre avec les paramètres interactifs
-            book_data = generator.generate_test_book(
+            book_data = generator.generate_book(
                 adventure_info['theme'], 
                 adventure_info['sections']
             )
             
             # Ajouter les informations de pays dans les métadonnées
             book_data['country'] = adventure_info['country']
-            book_data['generation_mode'] = 'Test rapide' if adventure_info['test_mode'] else 'Standard'
+            book_data['generation_mode'] = 'Standard'
             
             saved_files = generator.save_to_files(book_data, output)
             progress.update(task, completed=100)
@@ -269,7 +268,7 @@ def create(output: str):
         table.add_row("Destination", adventure_info['country'])
         table.add_row("Thème", adventure_info['theme'])
         table.add_row("Paragraphes", str(adventure_info['sections']))
-        table.add_row("Mode", adventure_info.get('generation_mode', 'Standard'))
+        table.add_row("Mode", "Standard")
         table.add_row("ID", book_data["id"])
         
         for fmt, filepath in saved_files.items():
@@ -282,6 +281,9 @@ def create(output: str):
         if Confirm.ask("\n[cyan]Créer un autre livre d'aventure ?[/cyan]", default=False):
             return create.callback(output)
         
+    except KeyboardInterrupt:
+        console.print(f"\n[yellow]⏹️ Génération annulée par l'utilisateur[/yellow]")
+        return 0
     except Exception as e:
         console.print(f"[bold red]❌ Erreur: {str(e)}[/bold red]")
         return 1
@@ -333,11 +335,7 @@ def generate(theme: str, sections: int, output: str, interactive: bool):
         country = "Destination mystérieuse"
     
     # Affichage du mode en fonction du nombre de sections
-    if sections <= 5:
-        mode = "🧪 MODE TEST"
-        color = "yellow"
-        advice = "Parfait pour des tests rapides"
-    elif sections <= 20:
+    if sections <= 20:
         mode = "🏃 MODE COURT"
         color = "blue" 
         advice = "Livre d'aventure court et dynamique"
@@ -374,7 +372,7 @@ def generate(theme: str, sections: int, output: str, interactive: bool):
         ) as progress:
             task = progress.add_task(f"[green]Génération de {sections} sections...", total=None)
             
-            book_data = generator.generate_test_book(theme, sections)
+            book_data = generator.generate_book(theme, sections)
             saved_files = generator.save_to_files(book_data, output)
             
             progress.update(task, completed=100)
@@ -397,6 +395,9 @@ def generate(theme: str, sections: int, output: str, interactive: bool):
         console.print(table)
         console.print(f"\n[green]📁 Fichiers sauvegardés dans: {output}/[/green]")
         
+    except KeyboardInterrupt:
+        console.print(f"\n[yellow]⏹️ Génération annulée par l'utilisateur[/yellow]")
+        return 0
     except Exception as e:
         console.print(f"[bold red]❌ Erreur: {str(e)}[/bold red]")
         return 1
@@ -540,94 +541,6 @@ def clean(days: int, dir: str):
     return 0
 
 
-@cli.command()
-@click.option(
-    '--theme',
-    '-t',
-    default="Les Mystères d'Égypte",
-    help='Thème pour le test (défaut: "Les Mystères d\'Égypte")'
-)
-@click.option(
-    '--sections',
-    '-s',
-    default=3,
-    type=click.IntRange(1, 50),
-    help='Nombre de sections/paragraphes à générer pour le test (défaut: 3, max recommandé: 10)'
-)
-@click.option(
-    '--output',
-    '-o',
-    default='output',
-    help='Répertoire de sortie'
-)
-def test(theme: str, sections: int, output: str):
-    """
-    Mode test : génère un livre d'aventure simplifié avec peu de sections
-    """
-    console.print(Panel.fit(
-        "[bold green]🧪 MODE TEST[/bold green]\n"
-        "[yellow]Génération simplifiée pour tests rapides[/yellow]",
-        border_style="green"
-    ))
-    
-    # Check API key
-    if not os.getenv("OPENAI_API_KEY"):
-        console.print("[bold red]❌ Erreur: OPENAI_API_KEY non configurée[/bold red]")
-        console.print("Veuillez configurer votre clé API dans le fichier .env")
-        return
-    
-    try:
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            console=console
-        ) as progress:
-            
-            task = progress.add_task(f"[green]Génération de {sections} sections...", total=None)
-            
-            # Initialize simple generator
-            generator = SimpleChasseTresorGenerator()
-            
-            # Generate test book
-            book_data = generator.generate_test_book(theme, sections)
-            
-            # Save to files
-            saved_files = generator.save_to_files(book_data, output)
-            
-            progress.update(task, completed=100)
-        
-        # Display results
-        console.print("\n[bold green]✅ Génération de test terminée ![/bold green]")
-        
-        table = Table(title="📚 Livre de Test Généré", border_style="green")
-        table.add_column("Propriété", style="cyan")
-        table.add_column("Valeur", style="yellow")
-        
-        table.add_row("Thème", theme)
-        table.add_row("Sections générées", str(sections))
-        table.add_row("Mode", "Test (simplifié)")
-        
-        for fmt, filepath in saved_files.items():
-            table.add_row(f"Fichier {fmt.upper()}", Path(filepath).name)
-        
-        console.print(table)
-        
-        # Show preview of markdown if available
-        if "markdown" in saved_files:
-            console.print(f"\n[green]📄 Aperçu du fichier Markdown:[/green]")
-            with open(saved_files["markdown"], 'r', encoding='utf-8') as f:
-                content = f.read()
-                preview = content[:1000] + "..." if len(content) > 1000 else content
-            console.print(f"[dim]{preview}[/dim]")
-        
-        console.print(f"\n[green]📁 Fichiers sauvegardés dans: {output}/[/green]")
-        
-    except Exception as e:
-        console.print(f"[bold red]❌ Erreur lors de la génération de test: {str(e)}[/bold red]")
-        console.print_exception()
-        return 1
-    
-    return 0
 
 
 @cli.command()

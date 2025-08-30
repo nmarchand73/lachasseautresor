@@ -5,8 +5,11 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 from pathlib import Path
 import os
+import signal
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn, TimeElapsedColumn
+from rich.console import Console
 
 load_dotenv()
 
@@ -29,10 +32,22 @@ class SimpleChasseTresorGenerator:
                 self.llm = None
         else:
             self.llm = None
+        
+        self.console = Console()
+        self.interrupted = False
+        
+        # Set up signal handler for CTRL+C
+        signal.signal(signal.SIGINT, self._signal_handler)
     
-    def generate_test_book(self, theme: str = "Les Mystères d'Égypte", num_sections: int = 3) -> Dict[str, Any]:
+    def _signal_handler(self, signum, frame):
+        """Handle CTRL+C interruption"""
+        self.interrupted = True
+        self.console.print(f"\n[yellow]⚠️ Interruption reçue... Arrêt de la génération...[/yellow]")
+        raise KeyboardInterrupt("Génération interrompue par l'utilisateur")
+    
+    def generate_book(self, theme: str = "Les Mystères d'Égypte", num_sections: int = 3) -> Dict[str, Any]:
         """
-        Génère un livre de test avec un nombre limité de sections
+        Génère un livre d'aventure avec un nombre spécifié de sections
         
         Args:
             theme: Thème du livre
@@ -41,21 +56,41 @@ class SimpleChasseTresorGenerator:
         Returns:
             Dictionnaire du livre généré
         """
-        print(f"🎯 Génération d'un livre de test : {theme}")
+        print(f"🎯 Génération du livre : {theme}")
         print(f"📝 Nombre de sections : {num_sections}")
         
         # Étape 1: Créer la structure de base
         book_data = self._create_book_structure(theme, num_sections)
         
         # Étape 2: Générer l'introduction
+        print("🎬 Génération de l'introduction...")
         intro = self._generate_intro(theme)
         book_data["content"]["intro"] = intro
+        print("✅ Introduction générée")
         
-        # Étape 3: Générer les sections numérotées
-        for i in range(1, num_sections + 1):
-            section = self._generate_section(i, theme, num_sections)
-            book_data["content"][str(i)] = section
-            print(f"✅ Section {i} générée")
+        # Étape 3: Générer les sections numérotées avec barre de progression
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            MofNCompleteColumn(),
+            TimeElapsedColumn(),
+            console=self.console
+        ) as progress:
+            sections_task = progress.add_task(
+                f"[green]Génération sections ({theme})", 
+                total=num_sections
+            )
+            
+            for i in range(1, num_sections + 1):
+                # Check for interruption before each section
+                if self.interrupted:
+                    raise KeyboardInterrupt("Génération interrompue")
+                
+                progress.update(sections_task, description=f"[green]Section {i}/{num_sections} - {theme}")
+                section = self._generate_section(i, theme, num_sections, progress, sections_task)
+                book_data["content"][str(i)] = section
+                progress.advance(sections_task)
         
         # Étape 4: Review final du livre généré
         print("📋 Révision qualité du livre...")
@@ -80,19 +115,19 @@ class SimpleChasseTresorGenerator:
         return {
             "id": f"lachasseautresor_{book_id}",
             "title": f"La Chasse au Trésor: {theme}",
-            "author": "Système CrewAI - Test Mode",
+            "author": "Système CrewAI",
             "content": {
                 "title": {
                     "paragraph_number": "title",
-                    "text": f"{theme}\nUn livre dont vous êtes le Héros\nGénéré par CrewAI - Mode Test",
+                    "text": f"{theme}\nUn livre dont vous êtes le Héros\nGénéré par CrewAI",
                     "choices": [],
                     "combat": None
                 }
             },
             "total_sections": num_sections,
             "created_at": datetime.now().isoformat(),
-            "original_filename": f"lachasseautresor_{book_id}_test.md",
-            "review_status": "test",
+            "original_filename": f"lachasseautresor_{book_id}.md",
+            "review_status": "generated",
             "sections_found": num_sections + 2  # +2 pour title et intro
         }
     
@@ -145,6 +180,10 @@ INTERDITS :
             raise ValueError("❌ API Key OpenAI requise pour générer du contenu de qualité")
             
         try:
+            # Check for interruption before LLM call
+            if self.interrupted:
+                raise KeyboardInterrupt("Génération interrompue")
+            
             response = self.llm.invoke(prompt)
             intro_text = response.content
         except Exception as e:
@@ -162,7 +201,7 @@ INTERDITS :
             "combat": None
         }
     
-    def _generate_section(self, section_num: int, theme: str, total_sections: int) -> Dict[str, Any]:
+    def _generate_section(self, section_num: int, theme: str, total_sections: int, progress=None, task_id=None) -> Dict[str, Any]:
         """Génère une section numérotée"""
         
         # Déterminer le type de section
@@ -224,11 +263,23 @@ INTERDITS : Incarner Philippe de Dieuleveult, technologie moderne, références 
             raise ValueError("❌ API Key OpenAI requise pour générer du contenu de qualité")
             
         try:
+            # Check for interruption before LLM call
+            if self.interrupted:
+                raise KeyboardInterrupt("Génération interrompue")
+            
+            # Mise à jour du statut pendant l'appel LLM
+            if progress and task_id:
+                progress.update(task_id, description=f"[yellow]🤖 LLM génère section {section_num}...")
+            
             response = self.llm.invoke(prompt)
             section_text = response.content
             
             # Extraire le titre de la section
             title = self._extract_title_from_section(section_text)
+            
+            # Mise à jour du statut après génération
+            if progress and task_id:
+                progress.update(task_id, description=f"[green]✅ Section {section_num} terminée")
                 
         except Exception as e:
             raise RuntimeError(f"❌ Erreur génération section {section_num}: {e}. Vérifiez votre connexion et votre API key.")
@@ -401,7 +452,7 @@ Sois exigeant sur l'authenticité - c'est crucial !
         # Sauvegarder Markdown uniquement
         try:
             markdown_content = self._convert_to_markdown(book_data)
-            markdown_filename = f"{book_id}_test_{timestamp}.md"
+            markdown_filename = f"{book_id}_{timestamp}.md"
             markdown_path = markdown_dir / markdown_filename
             
             with open(markdown_path, 'w', encoding='utf-8') as f:
