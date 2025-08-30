@@ -3,6 +3,10 @@ langchain-openai>=0.0.5
 python-dotenv>=1.0.0
 pydantic>=2.0.0
 
+# CrewAI multi-agent system
+crewai>=0.80.0
+crewai-tools>=0.12.0
+
 # CLI et interface
 click>=8.1.7
 rich>=13.7.0

@@ -1,0 +1,126 @@
+# Configuration des Tâches CrewAI pour La Chasse au Trésor
+# Tâches focalisées selon les meilleures pratiques CrewAI 2024
+
+conception_aventure:
+  description: >
+    Conçois le concept général d'une aventure "La Chasse au Trésor" pour le thème "{theme}" 
+    avec {num_sections} sections.
+    
+    MISSION FOCALISÉE: Créer la structure narrative et les 3 énigmes principales.
+    
+    CONTRAINTES:
+    - Diviser en 3 actes équilibrés (format TV 45 minutes)  
+    - Créer exactement 3 énigmes style Jacques Antoine (poétiques, culturelles)
+    - Définir l'arc narratif avec progression claire
+    - Assurer cohérence thématique pour {theme}
+    
+    CONTEXTE CULTUREL:
+    - Respecter l'authenticité des années 80 (pas de technologie moderne)
+    - Intégrer les contraintes d'époque (radio, boussole, hélicoptère)
+    - Ton familial adapté 7-77 ans, éducatif mais divertissant
+  expected_output: >
+    Document structuré avec:
+    - Titre de l'aventure
+    - Destination principale 
+    - Arc narratif en 3 actes
+    - 3 énigmes principales (une par acte)
+    - Éléments éducatifs clés
+  agent: jacques_antoine
+
+introduction_studio:
+  description: >
+    Rédige l'introduction de l'émission "La Chasse au Trésor" pour l'aventure "{theme}".
+    
+    MISSION FOCALISÉE: Créer l'ambiance studio et présenter l'aventure.
+    
+    DÉPENDANCE: Utilise le concept créé par Jacques Antoine.
+    
+    ÉLÉMENTS OBLIGATOIRES:
+    - Accueil téléspectateurs + candidats depuis studio parisien
+    - Présentation culturelle du thème {theme}
+    - Contact radio: "Allô Philippe? Vous nous recevez?"
+    - Lecture de la PREMIÈRE énigme (inspirée de Jacques Antoine)
+    - Instructions aux candidats: "Que conseillez-vous à Philippe?"
+    
+    STYLE AUTHENTIQUE:
+    - Ton Philippe Gildas (pédagogique, chaleureux)
+    - "Voyons ce que nous dit l'énigme..."
+    - "Attention, le temps presse!"
+    - Suspense avant "coupures pub"
+  expected_output: >
+    Introduction complète de 2000-2500 caractères avec:
+    - Accueil studio authentique
+    - Présentation culturelle du thème
+    - Contact radio établi
+    - Première énigme intégrée
+    - Transition vers l'action
+  agent: philippe_gildas
+
+sections_terrain:
+  description: >
+    Génère les {num_sections} sections d'aventure terrain pour "{theme}".
+    
+    MISSION FOCALISÉE: Créer les sections narratives avec répartition logique.
+    
+    DÉPENDANCES:
+    - Concept et énigmes de Jacques Antoine
+    - Introduction de Philippe Gildas
+    
+    RÉPARTITION INTELLIGENTE:
+    - Sections 1-{first_third}: Philippe de Dieuleveult découvre + Expert Local contextualise
+    - Sections {second_third}: Pilote transitions aériennes + Expert Local rencontres
+    - Sections {final_third}: Philippe de Dieuleveult résolution + moments épiques
+    
+    CONTRAINTES PAR SECTION:
+    - Format strict: #XX **[Titre]** + 2000-2500 caractères
+    - Lecteur = candidats en studio (PAS Philippe de Dieuleveult)
+    - Communications radio intégrées naturellement
+    - Choix cohérents vers section suivante
+    - Authenticity années 80 totale
+    
+    COLLABORATION REQUISE:
+    - Maintenir continuité narrative
+    - Intégrer énigmes aux moments appropriés
+    - Utiliser transitions radio de Philippe Gildas
+  expected_output: >
+    Ensemble structuré de {num_sections} sections avec:
+    - Format #XX **[Titre]** respecté
+    - Texte narratif 2000-2500 caractères chacune
+    - Choix de navigation cohérents
+    - Intégration énigmes et communications radio
+    - Progression narrative fluide
+  agent: philippe_dieuleveult
+
+revision_qualite:
+  description: >
+    Supervise la révision qualité finale de l'aventure "{theme}".
+    
+    MISSION FOCALISÉE: Contrôle qualité et cohérence télévisuelle.
+    
+    DÉPENDANCES:
+    - Concept de Jacques Antoine
+    - Introduction de Philippe Gildas
+    - Sections terrain de l'équipe
+    
+    CONTRÔLES OBLIGATOIRES:
+    - Cohérence narrative entre toutes les sections
+    - Intégration correcte des 3 énigmes principales
+    - Authenticité format TV années 80
+    - Communications radio studio/terrain réalistes
+    - Rythme 3 actes x 15 minutes respecté
+    - Moments de suspense "avant coupure pub"
+    - Transitions hélicoptère logiques
+    - Équilibre action/réflexion/culture
+    
+    SCORING OBLIGATOIRE:
+    - Authenticité "La Chasse au Trésor" (/100)
+    - Cohérence narrative (/100)  
+    - Qualité générale (/100)
+  expected_output: >
+    Rapport de révision avec:
+    - Scores qualité détaillés (/100 chacun)
+    - Validation des 3 énigmes intégrées
+    - Confirmation structure TV 45 minutes
+    - Suggestions d'amélioration si nécessaires
+    - Validation finale pour publication
+  agent: realisateur_tv
