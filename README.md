@@ -49,17 +49,11 @@ python test_clean.py
 ### Générer un livre
 
 ```bash
-# Génération simple (format Markdown par défaut)
+# Génération simple (format Markdown uniquement)
 python -m src.main generate
 
 # Génération avec thème spécifique
 python -m src.main generate --theme "Les Mystères d'Égypte"
-
-# Génération en format JSON
-python -m src.main generate --format json
-
-# Génération dans les deux formats
-python -m src.main generate --format both
 
 # Mode verbose pour voir les détails
 python -m src.main generate -v
@@ -90,7 +84,7 @@ lachasseauxtresor/
 │   ├── main.py               # CLI interface
 │   └── utils/                # Utilitaires
 │       ├── file_handler.py   # Gestion fichiers
-│       └── json_formatter.py # Format JSON
+│       └── json_formatter.py # Utilitaires JSON
 ├── output/                   # Livres générés
 │   ├── books/               # Fichiers JSON
 │   └── markdown/            # Fichiers Markdown
@@ -104,47 +98,55 @@ lachasseauxtresor/
 └── requirements.txt       # Dépendances
 ```
 
-## 📊 Formats de Sortie
+## 📊 Format de Sortie
 
-Les livres peuvent être générés dans deux formats :
+Les livres sont générés en **format Markdown uniquement** :
 
-### Format Markdown (par défaut)
+### Format Markdown
 Structure organisée avec :
-- Table des matières avec liens
-- Sections numérotées avec titres
-- Formatage lisible pour les humains
-- Compatible avec les éditeurs Markdown
+- **Table des matières** avec liens de navigation
+- **Sections numérotées** avec titres explicites
+- **Formatage lisible** pour les humains
+- **Compatible** avec les éditeurs Markdown
+- **Liens interactifs** entre les sections
+- **Métadonnées** en en-tête YAML
 
-### Format Golden Bullets JSON  
-Format technique avec :
-- 95 paragraphes numérotés
-- Sections spéciales (title, intro)
-- 2-3 choix par paragraphe
-- Longueur de 2000-2500 caractères par paragraphe
+### Structure du fichier généré
 
-### Exemple de structure JSON
+```markdown
+---
+title: "La Chasse au Trésor: Les Mystères d'Égypte"
+sections_found: 5
+---
 
-```json
-{
-  "id": "lachasseautresor_egypte",
-  "title": "La Chasse au Trésor: Les Mystères d'Égypte",
-  "content": {
-    "title": { ... },
-    "intro": { ... },
-    "1": {
-      "paragraph_number": 1,
-      "text": "#01\n- Titre\nContenu...",
-      "choices": [
-        {
-          "text": "Action\nAller au numéro #12",
-          "destination": 12
-        }
-      ],
-      "combat": null
-    },
-    ...
-  }
-}
+# Story Content (Spine Order)
+
+## Table of Contents
+
+- [**Introduction**](#introduction) (`intro`)
+- [**Section 1: Titre**](#section-1-titre) (`1`)
+- [**Section 2: Titre**](#section-2-titre) (`2`)
+
+---
+
+## Introduction
+
+[Contenu de l'introduction...]
+
+**Choices:**
+
+- [Commencer l'aventure](#section-1)
+
+---
+
+## Section 1: Titre
+
+[Contenu de la section...]
+
+**Choices:**
+
+- [Choix 1](#section-2)
+- [Choix 2](#section-2)
 ```
 
 ## 🔧 Configuration
@@ -174,11 +176,14 @@ MAX_TOKENS=2000
 
 **Version actuelle** : Système de génération fonctionnel avec :
 - ✅ Interface CLI complète
-- ✅ Générateur de contenu (avec/sans IA)
-- ✅ Export Markdown et JSON
-- ✅ Validation basique
+- ✅ Générateur de contenu (avec IA OpenAI)
+- ✅ Export Markdown avec navigation
+- ✅ Validation basique du contenu
 - ✅ Tests automatisés
+- ✅ Fallback sans API (contenu statique)
 - 🚧 Integration CrewAI (en développement)
+
+> **Note**: La génération JSON (format Golden Bullets) a été temporairement désactivée pour se concentrer sur la qualité du format Markdown.
 
 ## 🧪 Tests
 
